@@ -1,18 +1,7 @@
+from exceptions import *
 from collections import Counter
 from statistics import variance, stdev
 from time import time
-
-
-class ExceptionCustomerId(Exception):
-    """Некорректный id покупателя, не может быть меньше 0."""
-
-
-class ExceptionCustomersQuantity(Exception):
-    """Некорректное кол-во покупателей, не может быть меньше 0."""
-
-
-class ExceptionFirstId(Exception):
-    """Некорректный начальный id, не может быть меньше 0."""
 
 
 def customer_group_from_customer_id(customer_id: int) -> int:
@@ -21,8 +10,10 @@ def customer_group_from_customer_id(customer_id: int) -> int:
     :param customer_id: id покупателя
     :return: номер группы
     """
+    if not isinstance(customer_id, int):
+        raise CustomerIdTypeError('Некорректный id покупателя, должен быть целым числом')
     if customer_id < 0:
-        raise ExceptionCustomerId()
+        raise CustomerIdNegotiveError('Некорректный id покупателя, не может быть меньше 0')
 
     customer_group = 0
     while customer_id != 0:
@@ -40,8 +31,10 @@ def customer_group_from_customer_id_optimized(customer_id: int, n_groups: int = 
     :param n_groups: кол-во групп для разбиения
     :return: номер группы
     """
+    if not isinstance(customer_id, int):
+        raise CustomerIdTypeError('Некорректный id покупателя, должен быть целым числом')
     if customer_id < 0:
-        raise ExceptionCustomerId()
+        raise CustomerIdNegotiveError('Некорректный id покупателя, не может быть меньше 0')
 
     return customer_id % n_groups
 
@@ -56,10 +49,16 @@ def count_customers_by_groups(n_customers: int, n_first_id: int = 0,
     :param distribution_function: функция распределения, по умолчанию базовая
     :return: словарь групп и кол-ва покупателей в них
     """
+    if not isinstance(n_customers, int):
+        raise CustomersQuantityTypeError('Некорректное кол-во покупателей, должено быть целым числом')
     if n_customers < 0:
-        raise ExceptionCustomersQuantity()
+        raise CustomersQuantityNegotiveError('Некорректное кол-во покупателей, не может быть меньше 0')
+    if not isinstance(n_first_id, int):
+        raise FirstIdTypeError('Некорректный начальный id, должен быть целым числом')
     if n_first_id < 0:
-        raise ExceptionFirstId()
+        raise FirstIdNegotiveError('Некорректный начальный id, не может быть меньше 0')
+    if not callable(distribution_function):
+        raise NonFunctionError('Должна быть функция в качестве аргумента')
 
     groups = Counter()
     for customer_id in range(n_first_id, n_customers + n_first_id + 1):
@@ -89,17 +88,25 @@ if __name__ == '__main__':
     N_CUSTOMER = 741256
     N_FIRST_ID = 0
 
+    print(type(customer_group_from_customer_id))
+    print(type(1))
+
     try:
         print(f"Результат работы базовой функции")
         print_assessment_result(N_CUSTOMER, N_FIRST_ID, customer_group_from_customer_id)
-        print()
 
-        print(f"Результат работы оптимизированной функции")
+        print(f"\nРезультат работы оптимизированной функции")
         print_assessment_result(N_CUSTOMER, N_FIRST_ID, customer_group_from_customer_id_optimized)
 
-    except ExceptionCustomerId:
-        print("Некорректный id покупателя, не может быть меньше 0.")
-    except ExceptionCustomersQuantity:
-        print("Некорректное кол-во покупателей, не может быть меньше 0.")
-    except ExceptionFirstId:
-        print("Некорректный начальный id, не может быть меньше 0.")
+    except CustomerIdNegotiveError:
+        print("Некорректный id покупателя, не может быть меньше 0")
+    except CustomerIdTypeError:
+        print("Некорректный id покупателя, должен быть целым числом")
+    except CustomersQuantityNegotiveError:
+        print("Некорректное кол-во покупателей, не можно быть меньше 0")
+    except CustomersQuantityTypeError:
+        print("Некорректное кол-во покупателей, должено быть целым числом")
+    except FirstIdNegotiveError:
+        print("Некорректный начальный id, не может быть меньше 0")
+    except FirstIdTypeError:
+        print("Некорректный начальный id, должен быть целым числом")
