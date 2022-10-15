@@ -88,9 +88,6 @@ if __name__ == '__main__':
     N_CUSTOMER = 741256
     N_FIRST_ID = 0
 
-    print(type(customer_group_from_customer_id))
-    print(type(1))
-
     try:
         print(f"Результат работы базовой функции")
         print_assessment_result(N_CUSTOMER, N_FIRST_ID, customer_group_from_customer_id)
@@ -110,3 +107,5 @@ if __name__ == '__main__':
         print("Некорректный начальный id, не может быть меньше 0")
     except FirstIdTypeError:
         print("Некорректный начальный id, должен быть целым числом")
+    except NonFunctionError:
+        print("Должна быть функция в качестве аргумента")
