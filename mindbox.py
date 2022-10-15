@@ -78,6 +78,7 @@ def print_assessment_result(n_customers: int, n_first_id: int, distribution_func
     start = time()
     groups = count_customers_by_groups(n_customers, n_first_id, distribution_function)
     stop = time()
+    print(f"Результат работы функции {distribution_function.__name__}")
     print(f"Кол-во покупателей по группам (номер группы, кол-во покупателей):")
     print(*groups.items())
     print(f"Дисперсия: {variance(groups.values()):.2f}, стандарное отклонение: {stdev(groups.values()):.2f}")
@@ -89,10 +90,8 @@ if __name__ == '__main__':
     N_FIRST_ID = 0
 
     try:
-        print(f"Результат работы базовой функции")
         print_assessment_result(N_CUSTOMER, N_FIRST_ID, customer_group_from_customer_id)
-
-        print(f"\nРезультат работы оптимизированной функции")
+        print()
         print_assessment_result(N_CUSTOMER, N_FIRST_ID, customer_group_from_customer_id_optimized)
 
     except CustomerIdNegotiveError:
