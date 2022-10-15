@@ -26,9 +26,9 @@ def customer_group_from_customer_id(customer_id: int) -> int:
 def customer_group_from_customer_id_optimized(customer_id: int, n_groups: int = 10) -> int:
     """
     Оптимизированная функция распределения покупателя по группам.
-    Можно указать, на сколько групп необходимо распределять покупателей
-    :param customer_id: id покупателя
-    :param n_groups: кол-во групп для разбиения
+    Можно указать, на сколько групп необходимо распределять покупателей.
+    :param customer_id: id покупателя.
+    :param n_groups: кол-во групп для разбиения.
     :return: номер группы
     """
     if not isinstance(customer_id, int):
@@ -44,9 +44,9 @@ def count_customers_by_groups(n_customers: int, n_first_id: int = 0,
     """
     Функция, которая подсчитывает число покупателей, попадающих в каждую группу, если нумерация ID сквозная.
     Объединяет обе требуемые функции. Позволяет выбирать функцию распределения.
-    :param n_customers: кол-во клиентов
-    :param n_first_id: первый ID в последовательности, по умолчанию 0
-    :param distribution_function: функция распределения, по умолчанию базовая
+    :param n_customers: кол-во клиентов.
+    :param n_first_id: первый ID в последовательности, по умолчанию 0.
+    :param distribution_function: функция распределения, по умолчанию базовая.
     :return: словарь групп и кол-ва покупателей в них
     """
     if not isinstance(n_customers, int):
