@@ -67,7 +67,8 @@ def count_customers_by_groups(n_customers: int, n_first_id: int = 0,
     return groups
 
 
-def assessment_result(n_customers: int, n_first_id: int, distribution_function) -> (str, tuple, float, float, float):
+def assessment_result(n_customers: int, n_first_id: int, distribution_function) \
+        -> (str, tuple[tuple[int, int]], float, float, float):
     """
     Функция оценки работы разных функций распределения покупателей по группам.
     :param n_customers: кол-во клиентов.
@@ -89,7 +90,7 @@ def assessment_result(n_customers: int, n_first_id: int, distribution_function) 
 
 
 def print_assessment_result(distribution_function_name: str,
-                            customers_by_groups,
+                            customers_by_groups: tuple[tuple[int, int]],
                             variance_: float,
                             stdev_: float,
                             runtime: float) -> None:
