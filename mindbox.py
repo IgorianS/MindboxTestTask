@@ -67,22 +67,46 @@ def count_customers_by_groups(n_customers: int, n_first_id: int = 0,
     return groups
 
 
-def print_assessment_result(n_customers: int, n_first_id: int, distribution_function) -> None:
+def assessment_result(n_customers: int, n_first_id: int, distribution_function) -> (str, tuple, float, float, float):
     """
-    Функция вывода в консоль результатов оценки работы разных функций распределения покупателей по группам.
-    :param n_customers: кол-во клиентов
+    Функция оценки работы разных функций распределения покупателей по группам.
+    :param n_customers: кол-во клиентов.
     :param n_first_id: первый ID в последовательности, по умолчанию 0
-    :param distribution_function: функция распределения
-    :return:
+    :param distribution_function: функция распределения.
+    :return: название функции распределения, результаты распределения, дисперсия, стандартное отклонения, время работы.
     """
     start = time()
     groups = count_customers_by_groups(n_customers, n_first_id, distribution_function)
     stop = time()
-    print(f"Результат работы функции {distribution_function.__name__}")
+
+    distribution_function_name = distribution_function.__name__
+    customers_by_groups = groups.items()
+    variance_ = variance(groups.values())
+    stdev_ = stdev(groups.values())
+    runtime = stop - start
+
+    return distribution_function_name, customers_by_groups, variance_, stdev_, runtime
+
+
+def print_assessment_result(distribution_function_name: str,
+                            customers_by_groups,
+                            variance_: float,
+                            stdev_: float,
+                            runtime: float) -> None:
+    """
+    Функция вывода в консоль результатов оценки работы разных функций распределения покупателей по группам.
+    :param distribution_function_name: название функции распределения.
+    :param customers_by_groups: результат распределения покупателей по группам.
+    :param variance_: дисперсия итогов распределения покупателей по группам.
+    :param stdev_: стандартное отклонение итогов распределения покупателей по группам.
+    :param runtime: время распределения покупателей по группам.
+    :return:
+    """
+    print(f"Результат работы функции {distribution_function_name}")
     print(f"Кол-во покупателей по группам (номер группы, кол-во покупателей):")
-    print(*groups.items())
-    print(f"Дисперсия: {variance(groups.values()):.2f}, стандарное отклонение: {stdev(groups.values()):.2f}")
-    print(f'Время работы {(stop - start):.4f} сек')
+    print(*customers_by_groups)
+    print(f"Дисперсия: {variance_:.2f}, стандарное отклонение: {stdev_:.2f}")
+    print(f'Время работы {runtime:.4f} сек')
 
 
 if __name__ == '__main__':
@@ -90,9 +114,9 @@ if __name__ == '__main__':
     N_FIRST_ID = 0
 
     try:
-        print_assessment_result(N_CUSTOMER, N_FIRST_ID, customer_group_from_customer_id)
+        print_assessment_result(*assessment_result(N_CUSTOMER, N_FIRST_ID, customer_group_from_customer_id))
         print()
-        print_assessment_result(N_CUSTOMER, N_FIRST_ID, customer_group_from_customer_id_optimized)
+        print_assessment_result(*assessment_result(N_CUSTOMER, N_FIRST_ID, customer_group_from_customer_id_optimized))
 
     except CustomerIdNegotiveError:
         print("Некорректный id покупателя, не может быть меньше 0")
